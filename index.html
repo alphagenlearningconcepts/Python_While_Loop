@@ -61,7 +61,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #0f081d;
+            background-color: #5E48C4;
             font-family: 'Poppins', sans-serif;
             color: #1A1A1A;
             overflow-x: hidden;
@@ -309,7 +309,23 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-alphagen-purpleGhost">
+
+    <header class="w-full bg-alphagen-purple px-4 py-3.5 flex flex-wrap items-center justify-between gap-3 text-white shadow-md rounded-2xl mb-4 max-w-[1280px]">
+        <div class="flex items-center gap-3">
+          <a href="#" class="bg-alphagen-yellow hover:bg-alphagen-yellow-dark text-alphagen-near-black px-4 py-2 rounded-xl font-extrabold text-xs md:text-sm shadow-sm transition-all flex items-center gap-2">
+            <span class="tracking-wide">ALPHAGEN LEARNING</span>
+          </a>
+          <span class="font-extrabold text-base md:text-xl tracking-tight text-white">Python For Loop: Interactive Exploration</span>
+        </div>
+    
+        <!-- Right Controls matching reference -->
+        <div class="flex items-center gap-3">
+          <button onclick="toggleAudio()" id="audio-btn" class="bg-alphagen-purple-dark hover:bg-alphagen-purple-mid text-white p-2 rounded-lg transition-all" title="Toggle Sound">
+            <i class="fa-solid fa-volume-high text-base" id="sound-icon"></i>
+          </button>
+        </div>
+    </header>
 
     <div class="slide-stage">
 
@@ -527,10 +543,10 @@
                         <div class="flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-xl border border-alphagen-purplePale">
                             <span class="font-mono text-base font-bold">while i</span>
                             <select id="sim-sign-cond" onchange="updateSimOutput()" class="font-mono text-base font-bold bg-alphagen-purpleGhost border border-alphagen-purplePale rounded px-2 py-0.5">
-                                <option value="<="> < =</option>
+                                <option value="<="> &lt;=</option>
                                 <option value="<">&lt;</option>
                                 <option value=">">&gt;</option>
-                                <option value=">="> < =</option>
+                                <option value=">="> &gt;=</option>
                             </select>
                             <span id="sim-val-cond" class="font-mono font-bold text-lg text-alphagen-purple">10</span>
                             <div class="flex flex-col text-xs">
@@ -926,8 +942,8 @@
         </span>
 
         <button id="next-btn" class="nav-btn btn-interactive" onclick="nextSlide()">
-            <span>Next</span>
-            <i class="fa-solid fa-arrow-right"></i>
+            <span id="next-btn-text">Next</span>
+            <i id="next-btn-icon" class="fa-solid fa-arrow-right"></i>
         </button>
     </div>
 
@@ -1013,7 +1029,16 @@
             document.getElementById('slide-dropdown').value = currentSlide;
 
             document.getElementById('prev-btn').disabled = currentSlide === 1;
-            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+            
+            const nextBtnText = document.getElementById('next-btn-text');
+            const nextBtnIcon = document.getElementById('next-btn-icon');
+            if (currentSlide === totalSlides) {
+                nextBtnText.innerText = "Finish";
+                nextBtnIcon.className = "fa-solid fa-flag-checkered";
+            } else {
+                nextBtnText.innerText = "Next";
+                nextBtnIcon.className = "fa-solid fa-arrow-right";
+            }
         }
 
         function goToSlide(slideNum) {
@@ -1025,7 +1050,11 @@
         }
 
         function nextSlide() {
-            if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+            if (currentSlide < totalSlides) {
+                goToSlide(currentSlide + 1);
+            } else if (currentSlide === totalSlides) {
+                triggerConfetti();
+            }
         }
 
         function prevSlide() {
@@ -1095,7 +1124,7 @@
                     // ENLARGED Prominent Halted Condition Message Box
                     const alertBox = document.getElementById('grid-alert-box');
                     alertBox.className = 'bg-alphagen-coralPale border-2 border-alphagen-coral p-6 rounded-2xl text-center text-lg md:text-xl font-bold text-alphagen-coralDark shadow-lg';
-                    alertBox.innerHTML = '<div class="text-xl md:text-2xl font-extrabold mb-2"><i class="fa-solid fa-hand mr-2"></i> HALTED! Condition Met (Box #31 Hit)!</div><div>You keep repeating a task until you meet the condition. This is how a while loop works!</div>';
+                    alertBox.innerHTML = '<div class="text-xl md:text-2xl font-extrabold mb-2"><i class="fa-solid fa-hand mr-2"></i> HALTED! Condition Met (Box #31 Hit)!</div><div>You stop repeating a task until you meet the condition. This is how a while loop works!</div>';
                     
                     triggerConfetti();
                 } else {
@@ -1222,7 +1251,6 @@
 
                     if (syntaxFoundCount === 2) {
                         triggerConfetti();
-                        document.getElementById('syntax-found-badge').innerText = "All Valid Syntaxes Found!";
                     }
                 }
             } else {
